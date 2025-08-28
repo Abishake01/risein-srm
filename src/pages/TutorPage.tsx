@@ -8,11 +8,11 @@ const TutorPage = () => {
   const [activeTab, setActiveTab] = useState<'chat' | 'resources'>('chat');
 
   return (
-    <div className="min-h-screen pt-8 relative">
-      {/* Particles Background */}
+    <div className="relative min-h-screen mt-8">
+      {/* Full Background Particles - Electric Blue theme */}
       <div className="fixed inset-0 w-full h-full z-0 pointer-events-none">
         <Particles
-          particleColors={['#ffffff', '#ffffff']}
+          particleColors={['#00D4FF', '#0099FF', '#ffffff']}
           particleCount={1200}
           particleSpread={12}
           speed={0.08}
@@ -22,25 +22,27 @@ const TutorPage = () => {
           disableRotation={false}
         />
       </div>
-      
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-8 relative z-10">
-          <h1 className="text-4xl font-bold text-white mb-4">
+
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Header Section */}
+        <div className="text-center mb-12 pt-20">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-cyan-300 via-cyan-400 to-blue-400 bg-clip-text text-transparent drop-shadow-2xl">
             AI Clarity Tutor
           </h1>
-          <p className="text-xl text-gray-400">
+          <p className="text-xl md:text-2xl text-gray-300 leading-relaxed">
             Learn Clarity development with personalized AI assistance
           </p>
         </div>
 
-        <div className="flex justify-center mb-8 relative z-10">
-          <div className="flex bg-white/10 backdrop-blur-sm rounded-xl p-1">
+        {/* Tabs Section */}
+        <div className="flex justify-center mb-12">
+          <div className="flex bg-black/20 backdrop-blur-sm rounded-xl p-1 border border-cyan-400/30">
             <button
               onClick={() => setActiveTab('chat')}
               className={`flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
                 activeTab === 'chat'
-                  ? 'bg-purple-600 text-white shadow-lg'
-                  : 'text-gray-400 hover:text-white'
+                  ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-black shadow-lg shadow-cyan-500/40'
+                  : 'text-gray-400 hover:text-cyan-300'
               }`}
             >
               <MessageCircle className="h-4 w-4" />
@@ -50,8 +52,8 @@ const TutorPage = () => {
               onClick={() => setActiveTab('resources')}
               className={`flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
                 activeTab === 'resources'
-                  ? 'bg-purple-600 text-white shadow-lg'
-                  : 'text-gray-400 hover:text-white'
+                  ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-black shadow-lg shadow-cyan-500/40'
+                  : 'text-gray-400 hover:text-cyan-300'
               }`}
             >
               <BookOpen className="h-4 w-4" />
@@ -60,10 +62,17 @@ const TutorPage = () => {
           </div>
         </div>
 
-        <div className="relative z-10">
+        {/* Content Section */}
+        <div className="relative z-10 rounded-2xl bg-black/20 backdrop-blur-md border border-cyan-400/20 p-6 shadow-lg shadow-cyan-500/10">
           {activeTab === 'chat' ? <ChatInterface /> : <LearningResources />}
         </div>
       </div>
+
+      {/* Floating Glow Elements */}
+      <div className="absolute top-1/4 left-10 w-20 h-20 bg-cyan-400/20 rounded-full blur-xl animate-pulse"></div>
+      <div className="absolute top-1/3 right-10 w-16 h-16 bg-blue-400/20 rounded-full blur-xl animate-pulse delay-1000"></div>
+      <div className="absolute bottom-1/4 left-1/4 w-12 h-12 bg-cyan-300/20 rounded-full blur-xl animate-pulse delay-500"></div>
+      <div className="absolute bottom-1/3 right-1/4 w-14 h-14 bg-blue-300/20 rounded-full blur-xl animate-pulse delay-700"></div>
     </div>
   );
 };

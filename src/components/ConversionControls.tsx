@@ -1,43 +1,153 @@
-import React from 'react';
-import { ArrowRight, Loader2, Zap } from 'lucide-react';
+import { useState } from 'react';
+import CodeEditor from '../components/CodeEditor';
+import ConversionControls from '../components/ConversionControls';
+import VersionControl from '../components/VersionControl';
+import Particles from '../components/Particles';
 
-interface ConversionControlsProps {
-  onConvert: () => void;
-  isConverting: boolean;
-  hasInput: boolean;
-}
+const ConverterPage = () => {
+  const [solidityCode, setSolidityCode] = useState('');
+  const [clarityCode, setClarityCode] = useState('');
+  const [isConverting, setIsConverting] = useState(false);
+  const [versions, setVersions] = useState<Array<{ id: string; timestamp: Date; solidityCode: string; clarityCode: string }>>([]);
 
-const ConversionControls: React.FC<ConversionControlsProps> = ({
-  onConvert,
-  isConverting,
-  hasInput,
-}) => {
+  const handleConvert = async () => {
+    setIsConverting(true);
+    
+    // Simulate AI conversion delay
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // Mock AI conversion result
+    const mockClarityCode = `;; Converted Smart Contract
+;; Original Solidity converted to Clarity
+
+(define-constant contract-owner tx-sender)
+(define-constant err-owner-only (err u100))
+(define-constant err-not-found (err u101))
+
+(define-data-var counter uint u0)
+
+(define-public (increment)
+  (begin
+    (var-set counter (+ (var-get counter) u1))
+    (ok (var-get counter))
+  )
+)
+
+(define-read-only (get-counter)
+  (var-get counter)
+)
+
+(define-public (set-counter (value uint))
+  (begin
+    (asserts! (is-eq tx-sender contract-owner) err-owner-only)
+    (var-set counter value)
+    (ok value)
+  )
+)`;
+    
+    setClarityCode(mockClarityCode);
+    
+    // Save version
+    const newVersion = {
+      id: `v${versions.length + 1}`,
+      timestamp: new Date(),
+      solidityCode,
+      clarityCode: mockClarityCode,
+    };
+    setVersions([...versions, newVersion]);
+    
+    setIsConverting(false);
+  };
+
+  const handleLoadVersion = (version: any) => {
+    setSolidityCode(version.solidityCode);
+    setClarityCode(version.clarityCode);
+  };
+
   return (
-    <div className="flex justify-center mb-8">
-      <button
-        onClick={onConvert}
-        disabled={!hasInput || isConverting}
-        className={`group flex items-center space-x-3 px-8 py-4 rounded-xl font-semibold text-lg transition-all duration-300 ${
-          !hasInput || isConverting
-            ? 'bg-gray-600/50 text-gray-400 cursor-not-allowed'
-            : 'bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white shadow-2xl shadow-purple-600/40 hover:shadow-purple-600/60 transform hover:-translate-y-1'
-        }`}
-      >
-        {isConverting ? (
-          <>
-            <Loader2 className="h-5 w-5 animate-spin" />
-            <span>Converting...</span>
-          </>
-        ) : (
-          <>
-            <Zap className="h-5 w-5 group-hover:scale-110 transition-transform" />
-            <span>Convert to Clarity</span>
-            <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-          </>
-        )}
-      </button>
+    <div className="min-h-screen pt-8 relative bg-black/20">
+      {/* Particles Background */}
+      <div className="fixed inset-0 w-full h-full z-0 pointer-events-none">
+        <Particles
+          particleColors={['#00D4FF', '#0099FF', '#ffffff']}
+          particleCount={1200}
+          particleSpread={12}
+          speed={0.08}
+          particleBaseSize={100}
+          moveParticlesOnHover={true}
+          alphaParticles={true}
+          disableRotation={false}
+        />
+      </div>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent mb-4 shadow-lg">
+            Smart Contract Converter
+          </h1>
+          <p className="text-xl text-gray-300">
+            Transform your Solidity contracts into Clarity with AI precision
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+          <CodeEditor
+            title="Solidity Input"
+            language="solidity"
+            value={solidityCode}
+            onChange={setSolidityCode}
+            placeholder="// Paste your Solidity contract here
+pragma solidity ^0.8.0;
+
+contract SimpleCounter {
+    uint256 private counter;
+    address private owner;
+    
+    constructor() {
+        owner = msg.sender;
+        counter = 0;
+    }
+    
+    function increment() public {
+        counter += 1;
+    }
+    
+    function getCounter() public view returns (uint256) {
+        return counter;
+    }
+}"
+          />
+          
+          <CodeEditor
+            title="Clarity Output"
+            language="clarity"
+            value={clarityCode}
+            onChange={() => {}} // Read-only
+            readOnly
+            placeholder=";; Your converted Clarity contract will appear here
+;; Click 'Convert to Clarity' to start the AI-powered conversion"
+            showDeployButton
+            isConverting={isConverting}
+          />
+        </div>
+
+        <div className="mb-8">
+          <ConversionControls
+            onConvert={handleConvert}
+            isConverting={isConverting}
+            hasInput={!!solidityCode.trim()}
+          />
+        </div>
+
+        <div>
+          <VersionControl
+            versions={versions}
+            onLoadVersion={handleLoadVersion}
+          />
+        </div>
+      </div>
     </div>
   );
 };
 
-export default ConversionControls;
+export default ConverterPage;

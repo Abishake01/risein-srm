@@ -17,8 +17,8 @@ const WalletButton = () => {
       onClick={handleClick}
       className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all duration-300 ${
         isConnected
-          ? 'bg-green-600/20 text-green-300 border border-green-500/30 hover:bg-green-600/30'
-          : 'bg-purple-600 text-white hover:bg-purple-700 shadow-lg shadow-purple-600/30'
+          ? 'bg-cyan-600 text-blue-300 border border-cyan-500 hover:bg-cyan-400'
+          : 'bg-cyan-400 text-black hover:bg-blue-400 shadow-lg shadow-cyan-600/30'
       }`}
     >
       {isConnected ? (
